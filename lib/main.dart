@@ -1,14 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_admin/config/logger.dart';
 import 'package:flutter_admin/config/menu_config.dart';
 import 'package:flutter_admin/router/router_info.dart';
-import 'package:flutter_admin/views/app.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_admin/router/router_observer.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 void main() {
+  AdminRouter();
   runApp(const MyApp());
 }
 
@@ -18,7 +17,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     ThemeData themeData = ThemeData(
         primarySwatch: Colors.blue,
         tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
@@ -26,34 +24,27 @@ class MyApp extends StatelessWidget {
               labelStyle: const TextStyle(color: Colors.black26, fontSize: 14),
             ));
 
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => MenuConfig(menuOpen: true),
         ),
         ChangeNotifierProvider(
-          create: (_) => AdminRouter().goRouter,
+          create: (_) => AdminRouter(),
         ),
-
       ],
       child: MaterialApp.router(
         theme: themeData,
         title: 'Flutter Admin',
-        routerDelegate: AdminRouter().goRouter.routerDelegate,
-        routeInformationParser: AdminRouter().goRouter.routeInformationParser,
-        routeInformationProvider: AdminRouter().goRouter.routeInformationProvider,
+        routerDelegate: AutoRouterDelegate(
+          AdminRouter().appRouter,
+          navigatorObservers: () => [MyObserver()]
+        ),
+        routeInformationProvider: AdminRouter().appRouter.routeInfoProvider(),
+        routeInformationParser: AdminRouter().appRouter.defaultRouteParser(),
         builder: (routerContext, child) {
-          var router = routerContext.read<GoRouter>();
-          // 更新路由信息到App
-          AdminRouter().onSelected(router.location);
           return ResponsiveWrapper.builder(
-              Scaffold(
-                body: AppView(
-                  router: AdminRouter(),
-                  child: child!,
-                ),
-              ),
+            child,
               maxWidth: 2460,
               minWidth: 280,
               defaultScale: true,
@@ -65,7 +56,6 @@ class MyApp extends StatelessWidget {
               ],
               background: Container(color: const Color(0xFFF5F5F5)));
         },
-
       ),
     );
   }

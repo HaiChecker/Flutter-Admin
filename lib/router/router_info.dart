@@ -1,12 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/config/menu_config.dart';
-import 'package:flutter_admin/views/login/login.dart';
-import 'package:flutter_admin/views/menu_title.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+
+import 'package:flutter_admin/router/auto_router.gr.dart';
+import 'package:flutter_admin/router/menu_guard.dart';
 
 import '../config/logger.dart';
-import '../views/index.dart';
 
 class RouteInfo {
   final String path;
@@ -14,7 +12,7 @@ class RouteInfo {
   final String title;
   final IconData? icon;
 
-  final List<RouteInfo>? children;
+  List<RouteInfo>? children;
   final bool menu;
   final bool view;
   final bool affix;
@@ -33,7 +31,10 @@ class RouteInfo {
       this.view = true,
       this.children,
       this.icon,
-      this.runtimePair});
+      this.runtimePair}) {
+    id = "$path$name$title".hashCode.toString();
+    fullPath = "";
+  }
 
   bool isChildren() => children != null && children!.isNotEmpty;
 
@@ -62,141 +63,109 @@ class RouteInfo {
   }
 }
 
-final fixedRouters = <RouteInfo>[
-  RouteInfo(path: '/login', name: 'Login', title: "登录", menu: false),
-  RouteInfo(path: '/', name: 'Index', title: "首页", icon: Icons.home),
-  RouteInfo(
-      path: '/permission',
-      name: 'Permission',
-      title: "权限测试",
-      view: false,
-      icon: Icons.lock_outline,
-      children: [
-        RouteInfo(path: 'role', name: 'Role', title: "角色权限",affix: true,),
-      ]),
-  RouteInfo(path: '/icon', name: 'Icon', title: "图标", icon: Icons.image),
-  RouteInfo(path: '/chat', name: 'Chat', title: "图表", icon: Icons.table_chart)
-];
-
-final dynamicRouters = <RouteInfo>[];
-
 class AdminRouter extends ChangeNotifier {
   static final AdminRouter _instance = AdminRouter._internal();
-  late GoRouter goRouter;
   RouteInfo? currentRoute;
+  AppRouter appRouter = AppRouter(menuGuard: MenuGuard());
   var nameRouteInfo = <String, RouteInfo>{};
   List<RouteInfo> routeInfo = [];
   Map<String, Map<String, Object>> tips = {};
+  List<RouteInfo> parents = [];
+
+  List<RouteInfo> route({List<RouteConfig>? config, RouteInfo? parent}) {
+    List<RouteInfo> retData = [];
+    if (config == null) {
+      return retData;
+    }
+    var data = config;
+    for (int i = 0; i < data.length; i++) {
+      var value = data[i];
+      if (value.path.isEmpty) {
+        continue;
+      }
+      String title = value.meta['title'] ?? "";
+      bool menu = value.meta['menu'] ?? true;
+      bool view = value.meta['view'] ?? false;
+      IconData? iconData;
+      if (value.meta['icon_data'] != null) {
+        iconData = IconData(value.meta['icon_data'],
+            fontFamily: value.meta['icon_font']);
+      }
+      bool affix = value.meta['affix'] ?? false;
+      String id = i.toString();
+      if (parent != null) {
+        id = "${parent.id}.$id";
+      }
+      String fullPath = value.path;
+      if (parent != null) {
+        fullPath = "${parent.fullPath}/$fullPath";
+      }
+      fullPath = fullPath.replaceAll("//", "/");
+
+      RouteInfo routeInfo = RouteInfo(
+          path: value.path,
+          name: value.name,
+          title: title,
+          menu: menu,
+          view: view,
+          icon: iconData,
+          affix: affix,
+          children: []);
+      routeInfo.fullPath = fullPath;
+      routeInfo.id = id;
+      routeInfo.children =
+          route(config: value.children?.routes.toList(), parent: routeInfo);
+      nameRouteInfo[routeInfo.name] = routeInfo;
+      if (routeInfo.affix) {
+        // 固定到导航栏
+        tips[currentRoute!.name] = {
+          'id': routeInfo.id,
+          'title': routeInfo.title,
+          'affix': routeInfo.affix,
+          'name': routeInfo.name,
+          'fullPath': routeInfo.fullPath
+        };
+      }
+      retData.add(routeInfo);
+    }
+    return retData;
+  }
 
   AdminRouter._internal() {
-    routeInfo
-      ..addAll(fixedRouters)
-      ..addAll(dynamicRouters);
+    routeInfo = route(config: appRouter.routes);
+  }
 
-    List<GoRoute> getChild({RouteInfo? parent}) {
-      var ret = <GoRoute>[];
-      var tempRouteList = (parent?.children ?? routeInfo);
-      for (int i = 1; i <= tempRouteList.length; i++) {
-        RouteInfo routeInfo = tempRouteList[i - 1];
-        String id = i.toString();
-        if (parent != null) {
-          id = "${parent.id}.$id";
-        }
-        routeInfo.id = id;
-
-        String fullPath = routeInfo.path;
-        if (parent != null) {
-          fullPath = "${parent.fullPath}/${fullPath.replaceFirst("/", '')}";
-        }
-        routeInfo.fullPath = fullPath;
-        nameRouteInfo[routeInfo.name] = routeInfo;
-        if(routeInfo.affix && routeInfo.menu){
-          tips[routeInfo.name] = {
-            'name': routeInfo.name,
-            'id': routeInfo.id,
-            'title': routeInfo.title
-          };
-        }
-        ret.add(GoRoute(
-            path: routeInfo.path,
-            name: routeInfo.name,
-            pageBuilder: (context, state) {
-              return NoTransitionPage(
-                  child: onRouter(context, state, routeInfo));
-            },
-            routes: routeInfo.isChildren() ? getChild(parent: routeInfo) : []));
-      }
-      return ret;
+  void setNewNav(List<String> names) {
+    if (names.isEmpty) {
+      return;
     }
+    parents.clear();
+    parents = names.map((e) {
+      return nameRouteInfo[e]!;
+    }).toList();
+  }
 
-    goRouter = GoRouter(
-        routes: getChild(),
-        debugLogDiagnostics: true,
-        redirect: (context, state) {
-          onSelected(state.location);
-        });
+  void routerUpdate(String name) {
+    if (nameRouteInfo.containsKey(name)) {
+      if (currentRoute?.name == name) {
+        return;
+      }
+      currentRoute = nameRouteInfo[name];
+      if (currentRoute != null) {
+        // 添加到导航栏 - 不判断是否存在
+        tips[currentRoute!.name] = {
+          'id': currentRoute!.id,
+          'title': currentRoute!.title,
+          'affix': currentRoute!.affix,
+          'name': currentRoute!.name,
+          'fullPath': currentRoute!.fullPath
+        };
+      }
+    }
   }
 
   factory AdminRouter() {
     return _instance;
-  }
-
-  List<RouteInfo> getParent() {
-    if (currentRoute == null ||
-        !nameRouteInfo.containsKey(currentRoute!.name)) {
-      return [];
-    }
-    RouteInfo data = nameRouteInfo[currentRoute!.name]!;
-    var index = data.id.split(".");
-    List<RouteInfo> parent = [];
-
-    RouteInfo getChildren(List<RouteInfo> data, int index) {
-      return data[index];
-    }
-
-    RouteInfo? parentData;
-    for (var value in index) {
-      parentData =
-          getChildren(parentData?.children ?? routeInfo, int.parse(value) - 1);
-      parent.add(parentData);
-    }
-    return parent;
-  }
-
-  void onSelected(String? location) {
-    if (location != null) {
-      var m = goRouter.routeInformationParser.matcher.findMatch(location);
-      if (m.last.route is GoRoute) {
-        GoRoute route = m.last.route as GoRoute;
-        try {
-          if (currentRoute?.fullPath == route.path) {
-            return;
-          }
-          currentRoute = nameRouteInfo[route.name];
-          logger.i("Router:${currentRoute?.name} - ${currentRoute?.fullPath}");
-          if (!tips.containsKey(currentRoute!.name) && currentRoute!.menu) {
-            tips[currentRoute!.name] = {
-              'name': currentRoute!.name,
-              'id': currentRoute!.id,
-              'title': currentRoute!.title
-            };
-          }
-        } catch (e) {}
-        notifyListeners();
-      }
-    }
-  }
-
-  static Widget onRouter(
-      BuildContext context, GoRouterState state, RouteInfo routeInfo) {
-    switch (routeInfo.name) {
-      case "Index":
-        return IndexView();
-      case "Login":
-        return LoginView();
-      default:
-        return LoginView();
-    }
   }
 }
 

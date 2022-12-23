@@ -8,6 +8,7 @@ import 'package:fluttericon/fontelico_icons.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/base_style.dart';
+import '../animation/icon_color.dart';
 import 'controller/nav_menu_controller.dart';
 
 typedef IndexedBuilder = Widget Function(
@@ -24,7 +25,6 @@ typedef MenuStateBuilder = bool Function(RouteInfo route);
 
 typedef OnSelected = void Function(RouteInfo data);
 
-@CopyWith()
 class NavMenuItemStyle {
   final MaterialStateProperty<TextStyle> titleStyle;
   final MaterialStateProperty<Color> backgroundColor;
@@ -35,7 +35,7 @@ class NavMenuItemStyle {
       required this.backgroundColor,
       required this.iconColor});
 }
-@CopyWith()
+
 class NavMenuStyle extends BaseStyle {
   NavMenuStyle({super.background});
 }
@@ -81,7 +81,7 @@ class _NavMenuItem extends State<NavMenuItem>
   Widget build(BuildContext context) {
     String path = widget.data.id;
     // 获取层级
-    int cell = path.split(".").length;
+    int cell = path.split(".").length - 1;
 
     switch (cell) {
       case 1:
@@ -101,16 +101,21 @@ class _NavMenuItem extends State<NavMenuItem>
             .resolve(widget.materialState.value),
         height: size.maxWidth > 100 ? 50 : size.maxWidth,
         width: size.maxWidth,
-        padding: size.maxWidth > 100 ? EdgeInsets.only(left: 15 * cell.toDouble()) : null,
+        padding: size.maxWidth > 100
+            ? EdgeInsets.only(left: 15 * cell.toDouble())
+            : null,
         duration: const Duration(milliseconds: 200),
         child: widget.menuOpen
             ? Row(
                 children: [
-                  Icon(
-                    widget.data.icon ?? Icons.browser_not_supported_rounded,
-                    size: 15,
+                  IconColor(
+                    Icon(
+                      widget.data.icon ?? Icons.browser_not_supported_rounded,
+                      size: 15,
+                    ),
                     color: widget.itemStyle!.iconColor
                         .resolve(widget.materialState.value),
+                    duration: const Duration(milliseconds: 500),
                   ),
                   Expanded(
                       child: Container(
@@ -118,7 +123,7 @@ class _NavMenuItem extends State<NavMenuItem>
                     child: AnimatedDefaultTextStyle(
                       style: widget.itemStyle!.titleStyle
                           .resolve(widget.materialState.value),
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 500),
                       child: Text(
                         widget.data.title,
                       ),
@@ -145,7 +150,8 @@ class _NavMenuItem extends State<NavMenuItem>
                 child: Icon(
                   widget.data.icon ?? Icons.browser_not_supported_rounded,
                   color: widget.itemStyle!.titleStyle
-                      .resolve(widget.materialState.value).color,
+                      .resolve(widget.materialState.value)
+                      .color,
                 ),
               ),
       );

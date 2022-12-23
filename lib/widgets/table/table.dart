@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_admin/config/logger.dart';
-import 'package:flutter_admin/widgets/table/table_item_states_controller.dart';
 import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:flutter_admin/style/colors.dart';
 import 'package:flutter_admin/widgets/table/controller.dart';
@@ -19,7 +18,7 @@ class AdminTable<T> extends StatefulWidget {
   final BoxDecoration? decoration;
   Map<int, MaterialStatesController> materialStates = {};
 
-  // TableItemStatesController tableItemStatesController = TableItemStatesController({});
+
   AdminTable(
       {super.key,
       required this.controller,
@@ -43,7 +42,6 @@ class _AdminTable<T> extends State<AdminTable> {
   bool end = false;
   late AdminTableStyle tableStyle;
   late AdminTableItemStyle tableItemStyle;
-  GlobalKey cellKey = GlobalKey();
 
   @override
   void initState() {
@@ -69,7 +67,6 @@ class _AdminTable<T> extends State<AdminTable> {
           end = true;
         }
       }
-
       if (noneHorizontal.position.minScrollExtent >=
           noneHorizontal.offset - 5) {
         if (start) {
@@ -105,13 +102,7 @@ class _AdminTable<T> extends State<AdminTable> {
   }
 
   _TableCell getHeader(FixedDirection direction) {
-    // if (!widget.materialStates.containsKey(-1)) {
-    //   widget.materialStates[-1] = MaterialStatesController();
-    //   widget.materialStates[-1]!.removeListener(updateView);
-    //   widget.materialStates[-1]!.addListener(updateView);
-    // }
     return _TableCell<T>(
-      key: Key("table_cell_${direction.name}_-1"),
       materialStatesController: MaterialStatesController(),
       index: -1,
       tableItemStyle: tableItemStyle,
@@ -156,7 +147,6 @@ class _AdminTable<T> extends State<AdminTable> {
           widget.materialStates[index]!.addListener(updateView);
         }
         return _TableCell<T>(
-          key: Key("table_cell_$index"),
           materialStatesController: widget.materialStates[index]!,
           tableStyle: tableStyle,
           tableItemStyle: tableItemStyle,
@@ -199,7 +189,6 @@ class _AdminTable<T> extends State<AdminTable> {
         ],
       );
     }
-
     return Tuple2(
         width,
         SizedBox(
@@ -236,6 +225,7 @@ class _AdminTable<T> extends State<AdminTable> {
     tableStyle = widget.tableStyle ?? AdminColors().get().tableStyle;
     tableItemStyle =
         widget.tableItemStyle ?? AdminColors().get().tableItemStyle;
+
     return LayoutBuilder(builder: (context, size) {
       var leftRightWidth = 0.0;
 
@@ -307,7 +297,6 @@ class _AdminTable<T> extends State<AdminTable> {
           child: rightWidget,
         ));
       }
-      logger.i("Width:${leftRightWidth}");
       return Container(
         width: size.maxWidth,
         height: size.maxHeight,

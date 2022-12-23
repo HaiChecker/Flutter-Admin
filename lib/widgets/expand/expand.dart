@@ -63,7 +63,6 @@ class _AdminExpand extends State<AdminExpand>
 
   @override
   void didChangeDependencies() {
-    logger.i("Expand didChangeDependencies");
     super.didChangeDependencies();
   }
 

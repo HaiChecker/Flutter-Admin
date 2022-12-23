@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 typedef OnLoadingView = Widget Function(BuildContext context);
 
-@CopyWith()
+
 class LoadingStyle {
   final Color backgroundColor;
   final OnLoadingView onLoadingView;

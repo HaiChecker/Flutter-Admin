@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_admin/config/logger.dart';
 import 'package:flutter_admin/views/menu_title.dart';
 import 'package:flutter_admin/widgets/expand/expand.dart';
 import 'package:flutter_admin/widgets/menu/nav_menu_define.dart';
@@ -55,7 +56,7 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
       }
       String path = data.id;
       // 获取层级
-      int cell = path.split(".").length;
+      int cell = path.split(".").length - 1;
       late NavMenuItemStyle? itemStyle;
       switch (cell) {
         case 1:
@@ -113,7 +114,7 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
         return InkWell(
           onTap: () {
             if (widget.onSelected != null) {
-              widget.onSelected!(data);
+                widget.onSelected!(data);
             }
           },
           child: MouseRegion(

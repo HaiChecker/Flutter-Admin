@@ -1,13 +1,15 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/router/router_info.dart';
-import 'package:logger/logger.dart';
+
+import '../config/logger.dart';
+
 
 
 
 class MenuTitle extends StatefulWidget {
-  final AdminRouter router;
 
-  const MenuTitle({super.key, required this.router});
+  const MenuTitle({super.key});
 
   @override
   State<StatefulWidget> createState() => _MenuTitle();
@@ -17,14 +19,10 @@ class _MenuTitle extends State<MenuTitle> {
   @override
   void initState() {
     super.initState();
-    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((timeStamp) {
-      widget.router.addListener(updateView);
-    });
   }
 
   @override
   void dispose() {
-    widget.router.removeListener(updateView);
     super.dispose();
   }
 
@@ -34,15 +32,14 @@ class _MenuTitle extends State<MenuTitle> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),child: Row(
-      children: widget.router.tips.values.map((e) {
-        bool selected = (e['id'] == widget.router.currentRoute?.id);
+      children: AdminRouter().tips.values.map((e) {
+        bool selected = (e['id'] == AdminRouter().currentRoute?.id);
         String title = e['title'] as String;
         return InkWell(
           onTap: () {
-            widget.router.goRouter.goNamed(e['name'] as String);
+            context.router.navigateNamed(e['fullPath'] as String);
           },
           child: AnimatedContainer(
             margin: const EdgeInsets.only(right: 5),

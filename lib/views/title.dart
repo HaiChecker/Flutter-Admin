@@ -1,49 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/config/menu_config.dart';
 import 'package:flutter_admin/router/router_info.dart';
 import 'package:flutter_admin/views/breadcrumb.dart';
 import 'package:flutter_admin/widgets/button/button.dart';
 import 'package:flutter_admin/widgets/button/style.dart';
-import 'package:flutter_admin/widgets/menu/controller/nav_menu_controller.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../style/colors.dart';
 
-class TitleView extends StatefulWidget {
-  final AdminRouter router;
+class TitleView extends StatelessWidget {
 
-  const TitleView({super.key, required this.router});
-
-  @override
-  State<StatefulWidget> createState() => _TitleView();
-}
-
-class _TitleView extends State<TitleView> {
-  @override
-  void initState() {
-    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((timeStamp) {
-      widget.router.addListener(updateView);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.router.removeListener(updateView);
-    super.dispose();
-  }
-
-  void updateView() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  const TitleView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<RouteInfo> titles = widget.router.getParent();
-    RouteInfo? currentRoute = widget.router.currentRoute;
+    List<RouteInfo> titles = AdminRouter().parents;
+    RouteInfo? currentRoute = AdminRouter().currentRoute;
 
     return LayoutBuilder(builder: (context, size) {
       return BreadCrumbView(
@@ -81,4 +51,5 @@ class _TitleView extends State<TitleView> {
           }).toList());
     });
   }
+
 }

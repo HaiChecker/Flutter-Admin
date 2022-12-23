@@ -6,7 +6,6 @@ enum BorderType { top, left, right, bottom, all }
 
 typedef OnStripe = Color Function(int index);
 
-@CopyWith()
 class AdminTableStyle extends BaseStyle {
   // 斑马线
   final OnStripe? stripe;
@@ -24,9 +23,7 @@ class AdminTableStyle extends BaseStyle {
       required this.borderType});
 }
 
-@CopyWith(constructor: "_")
 class AdminTableItemStyle {
-  @CopyWithField(immutable: true)
   final MaterialStateProperty<Color> backgroundColor;
 
   AdminTableItemStyle({required this.backgroundColor});

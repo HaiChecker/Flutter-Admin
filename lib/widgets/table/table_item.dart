@@ -17,13 +17,14 @@ class AdminTableItem<T> {
   final ItemView<T> itemView;
   OnDisplay? onDisplay;
   final Key? key;
+  String? prop;
 
   AdminTableItem(
-      {
-      required this.itemView,
+      {required this.itemView,
       required this.width,
       required this.label,
       this.key,
+      this.prop,
       this.fixed = FixedDirection.none,
       this.onDisplay});
 }

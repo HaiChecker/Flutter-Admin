@@ -1,11 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_admin/router/router_info.dart';
 import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
 import '../style/colors.dart';
 
-typedef AdminRouter = GoRouter Function();
 
 abstract class AdminView extends StatefulWidget {
   final logger = Logger();
@@ -15,6 +15,10 @@ abstract class AdminView extends StatefulWidget {
 
 class AdminStateView<T extends AdminView> extends State<T> {
   final logger = Logger();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // 大屏幕
   Widget? buildForLarge(BuildContext context) => null;
