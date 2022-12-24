@@ -13,10 +13,11 @@
 | 自适应收缩侧边栏       |    ✅    |Mobile、Desktop|
 | Dashboard       |    ❌    |Mobile、Desktop|
 |图表 |❌    |Mobile、Desktop|
+|多语言 |❌    |...|
 
 # 引用
-[AutoRoute](https://github.com/Milad-Akarie/auto_route_library "AutoRoute")
-[ResponsiveFramework](https://github.com/Codelessly/ResponsiveFramework "ResponsiveFramework")
+[@AutoRoute](https://github.com/Milad-Akarie/auto_route_library "AutoRoute")
+[@ResponsiveFramework](https://github.com/Codelessly/ResponsiveFramework "ResponsiveFramework")
 
 
 # 截图
