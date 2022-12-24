@@ -8,6 +8,8 @@ import '../../style/colors.dart';
 import '../../widgets/table/table.dart';
 
 class SchoolView extends AdminView {
+  SchoolView({super.key});
+
   @override
   State<StatefulWidget> createState() => _SchoolView();
 }

@@ -1,9 +1,8 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/router/router_info.dart';
 import 'package:flutter_admin/style/colors.dart';
 import 'package:flutter_admin/widgets/button/style.dart';
 import 'package:flutter_admin/widgets/input/input.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/button/button.dart';
 import '../base_views.dart';
@@ -19,7 +18,6 @@ class _LoginView extends AdminStateView<LoginView> {
 
   @override
   void initState() {
-    logger.i("Init State Login");
     super.initState();
   }
 
@@ -118,8 +116,7 @@ class _LoginView extends AdminStateView<LoginView> {
                                     buttonSize: AdminButtonSize.medium,
                                     buttonShape: AdminButtonShape.circle,
                                     onTop: () {
-                                      // AutoRouter.of(context).pushNamed("Index");
-                                      AdminRouter().appRouter.pushNamed("/main/index");
+                                      context.pushNamed('Index');
                                     },
                                     text: "登录",
                                   ),
@@ -220,7 +217,7 @@ class _LoginView extends AdminStateView<LoginView> {
                               buttonSize: AdminButtonSize.medium,
                               buttonShape: AdminButtonShape.circle,
                               onTop: () {
-                                AdminRouter().appRouter.pushNamed("/main/index");
+                                context.pushNamed('Index');
                               },
                               text: "登录",
                             ),

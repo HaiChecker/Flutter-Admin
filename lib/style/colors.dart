@@ -53,19 +53,20 @@ class AdminTheme {
   final AdminTableStyle tableStyle;
   final AdminTableItemStyle tableItemStyle;
 
-  factory AdminTheme({NavMenuStyle? navMenuStyle,
-    NavMenuItemStyle? navMenuItemStyle,
-    NavMenuItemStyle? navMenuItemStyle2,
-    NavMenuItemStyle? navMenuItemStyle3,
-    AdminInputStyle? inputStyle,
-    AdminButtonStateProperty<AdminButtonStyle>? buttonStyle,
-    MaterialStateProperty<MouseCursor>? clickMouse,
-    Color? backgroundColor,
-    Color? primaryBackgroundColor,
-    Color? secondaryColor,
-    LoadingStyle? loadingStyle,
-    AdminTableStyle? tableStyle,
-    AdminTableItemStyle? tableItemStyle}) {
+  factory AdminTheme(
+      {NavMenuStyle? navMenuStyle,
+      NavMenuItemStyle? navMenuItemStyle,
+      NavMenuItemStyle? navMenuItemStyle2,
+      NavMenuItemStyle? navMenuItemStyle3,
+      AdminInputStyle? inputStyle,
+      AdminButtonStateProperty<AdminButtonStyle>? buttonStyle,
+      MaterialStateProperty<MouseCursor>? clickMouse,
+      Color? backgroundColor,
+      Color? primaryBackgroundColor,
+      Color? secondaryColor,
+      LoadingStyle? loadingStyle,
+      AdminTableStyle? tableStyle,
+      AdminTableItemStyle? tableItemStyle}) {
     backgroundColor = backgroundColor ?? const Color(0xFF212331);
     primaryBackgroundColor = primaryBackgroundColor ?? const Color(0xFF2B2D3D);
 
@@ -85,97 +86,87 @@ class AdminTheme {
     Color navMenuItemHovered2 = const Color(0xFF333545);
     navMenuItemStyle ??=
         NavMenuItemStyle(iconColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return Colors.white;
-          }
-
-          if (states.contains(MaterialState.selected)) {
-            return Colors.blue;
-          } else {
-            return Colors.white70;
-          }
-        }), backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.hovered)) {
-            return navMenuItemHovered;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return navMenuItemColor;
-          } else {
-            return navMenuItemColor;
-          }
-        }), titleStyle: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return const TextStyle(fontSize: 14, color: Colors.white);
-          }
-          if (states.contains(MaterialState.selected)) {
-            return const TextStyle(fontSize: 14, color: Colors.blue);
-          } else {
-            return const TextStyle(fontSize: 14, color: Colors.white70);
-          }
-        }));
+      if (states.contains(MaterialState.selected)) {
+        return Colors.blue;
+      }
+      if (states.contains(MaterialState.focused)) {
+        return Colors.white;
+      }
+      return Colors.white70;
+    }), backgroundColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.hovered)) {
+        return navMenuItemHovered;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return navMenuItemColor;
+      } else {
+        return navMenuItemColor;
+      }
+    }), titleStyle: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
+        return const TextStyle(fontSize: 14, color: Colors.blue);
+      }
+      if (states.contains(MaterialState.focused)) {
+        return const TextStyle(fontSize: 14, color: Colors.white);
+      }
+      return const TextStyle(fontSize: 14, color: Colors.white70);
+    }));
 
     navMenuItemStyle2 ??=
         NavMenuItemStyle(iconColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return Colors.white;
-          }
-
-          if (states.contains(MaterialState.selected)) {
-            return Colors.blue;
-          } else {
-            return Colors.white70;
-          }
-        }), backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.hovered)) {
-            return navMenuItemHovered2;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return navMenuItemOpenColor.withOpacity(0.9);
-          } else {
-            return navMenuItemOpenColor;
-          }
-        }), titleStyle: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return const TextStyle(fontSize: 14, color: Colors.white);
-          }
-          if (states.contains(MaterialState.selected)) {
-            return const TextStyle(fontSize: 14, color: Colors.blue);
-          } else {
-            return const TextStyle(fontSize: 14, color: Colors.white70);
-          }
-        }));
+      if (states.contains(MaterialState.selected)) {
+        return Colors.blue;
+      }
+      if (states.contains(MaterialState.focused)) {
+        return Colors.white;
+      }
+      return Colors.white70;
+    }), backgroundColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.hovered)) {
+        return navMenuItemHovered2;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return navMenuItemOpenColor.withOpacity(0.9);
+      } else {
+        return navMenuItemOpenColor;
+      }
+    }), titleStyle: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
+        return const TextStyle(fontSize: 14, color: Colors.blue);
+      }
+      if (states.contains(MaterialState.focused)) {
+        return const TextStyle(fontSize: 14, color: Colors.white);
+      }
+      return const TextStyle(fontSize: 14, color: Colors.white70);
+    }));
 
     navMenuItemStyle3 ??=
         NavMenuItemStyle(iconColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return Colors.white;
-          }
-
-          if (states.contains(MaterialState.selected)) {
-            return Colors.blue;
-          } else {
-            return Colors.white70;
-          }
-        }), backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.hovered)) {
-            return navMenuItemHovered2;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return navMenuItemOpenColor.withOpacity(0.9);
-          } else {
-            return navMenuItemOpenColor;
-          }
-        }), titleStyle: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.focused)) {
-            return const TextStyle(fontSize: 14, color: Colors.white);
-          }
-
-          if (states.contains(MaterialState.selected)) {
-            return const TextStyle(fontSize: 14, color: Colors.blue);
-          } else {
-            return const TextStyle(fontSize: 14, color: Colors.white70);
-          }
-        }));
+      if (states.contains(MaterialState.selected)) {
+        return Colors.blue;
+      }
+      if (states.contains(MaterialState.focused)) {
+        return Colors.white;
+      }
+      return Colors.white70;
+    }), backgroundColor: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.hovered)) {
+        return navMenuItemHovered2;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return navMenuItemOpenColor.withOpacity(0.9);
+      } else {
+        return navMenuItemOpenColor;
+      }
+    }), titleStyle: MaterialStateProperty.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
+        return const TextStyle(fontSize: 14, color: Colors.blue);
+      }
+      if (states.contains(MaterialState.focused)) {
+        return const TextStyle(fontSize: 14, color: Colors.white);
+      }
+      return const TextStyle(fontSize: 14, color: Colors.white70);
+    }));
 
     inputStyle ??= AdminInputStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
@@ -211,7 +202,7 @@ class AdminTheme {
     Color textColor = Colors.white;
 
     MaterialStateProperty<TextStyle> buttonText =
-    MaterialStateProperty.resolveWith((states) {
+        MaterialStateProperty.resolveWith((states) {
       if (states.contains(MaterialState.disabled)) {
         return TextStyle(fontSize: 14, color: textColor.withOpacity(0.5));
       } else {
@@ -402,16 +393,15 @@ class AdminTheme {
     });
     clickMouse ??=
         MaterialStateProperty.resolveWith((Set<MaterialState> states) {
-          if (states.contains(MaterialState.disabled)) {
-            return SystemMouseCursors.forbidden;
-          }
-          return SystemMouseCursors.basic;
-        });
+      if (states.contains(MaterialState.disabled)) {
+        return SystemMouseCursors.forbidden;
+      }
+      return SystemMouseCursors.basic;
+    });
 
     loadingStyle ??= LoadingStyle(
         Colors.white.withOpacity(0.9),
-            (context) =>
-            CircularProgressIndicator(
+        (context) => CircularProgressIndicator(
               backgroundColor: backgroundColor?.withOpacity(0.6),
               color: backgroundColor,
             ));
@@ -423,7 +413,7 @@ class AdminTheme {
           if (index == -1) {
             return primaryBackgroundColor!;
           } else {
-            return index % 2 == 0 ? tableItem: stripeColor;
+            return index % 2 == 0 ? tableItem : stripeColor;
           }
         },
         border: true,
@@ -437,18 +427,18 @@ class AdminTheme {
 
     tableItemStyle ??= AdminTableItemStyle(
         backgroundColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.disabled)) {
-            return tableItemDisabled;
-          }
-          if (states.contains(MaterialState.hovered) ||
-              states.contains(MaterialState.focused)) {
-            return tableItemHovered;
-          }
-          if (states.contains(MaterialState.selected)) {
-            return tableItemSelected;
-          }
-          return Colors.transparent;
-        }));
+      if (states.contains(MaterialState.disabled)) {
+        return tableItemDisabled;
+      }
+      if (states.contains(MaterialState.hovered) ||
+          states.contains(MaterialState.focused)) {
+        return tableItemHovered;
+      }
+      if (states.contains(MaterialState.selected)) {
+        return tableItemSelected;
+      }
+      return Colors.transparent;
+    }));
 
     return AdminTheme.raw(
         navMenuStyle,
@@ -466,7 +456,8 @@ class AdminTheme {
         tableItemStyle);
   }
 
-  const AdminTheme.raw(this.navMenuStyle,
+  const AdminTheme.raw(
+      this.navMenuStyle,
       this.navMenuItemStyle,
       this.navMenuItemStyle2,
       this.navMenuItemStyle3,

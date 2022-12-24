@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_admin/config/logger.dart';
-import 'package:flutter_admin/views/menu_title.dart';
 import 'package:flutter_admin/widgets/expand/expand.dart';
 import 'package:flutter_admin/widgets/menu/nav_menu_define.dart';
 
 import '../../router/router_info.dart';
 import '../../style/colors.dart';
-import 'controller/nav_menu_controller.dart';
 
 class NavMenu extends StatefulWidget {
   final IndexedBuilder indexedBuilder;
@@ -48,17 +45,15 @@ class NavMenu extends StatefulWidget {
 }
 
 class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
-  Widget? children(int index, bool menuOpen, {List<RouteInfo>? parentList}) {
+  Widget? children(int level, int index, bool menuOpen,
+      {List<RouteInfo>? parentList}) {
     if (index != -1) {
       var data = parentList?[index] ?? widget.rootBuilder(index);
       if (data.menu == false) {
         return null;
       }
-      String path = data.id;
-      // 获取层级
-      int cell = path.split(".").length - 1;
       late NavMenuItemStyle? itemStyle;
-      switch (cell) {
+      switch (level) {
         case 1:
           itemStyle = widget.itemStyle1;
           break;
@@ -91,9 +86,9 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
       AnimationController animationController = data.getPair('animation');
       bool isChildren = data.isChildren();
       if (isChildren) {
-        Widget? c = children(-1, menuOpen, parentList: data.children);
+        Widget? c =
+            children(level + 1, -1, menuOpen, parentList: data.children);
         return AdminExpand(
-          // expand: widget.controller.isExpand(data['id']),
           expand: widget.onChild(data),
           animationController: animationController,
           content: MouseRegion(
@@ -105,8 +100,15 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
               (data.getPair('materialState') as MaterialStatesController)
                   .update(MaterialState.hovered, false);
             },
-            child: widget.indexedBuilder(context, data, index, itemStyle,
-                data.getPair('materialState'), animationController, menuOpen),
+            child: widget.indexedBuilder(
+                context,
+                data,
+                index,
+                itemStyle,
+                data.getPair('materialState'),
+                animationController,
+                menuOpen,
+                level),
           ),
           child: c ?? Container(),
         );
@@ -114,7 +116,7 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
         return InkWell(
           onTap: () {
             if (widget.onSelected != null) {
-                widget.onSelected!(data);
+              widget.onSelected!(data);
             }
           },
           child: MouseRegion(
@@ -126,15 +128,22 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
               (data.getPair('materialState') as MaterialStatesController)
                   .update(MaterialState.hovered, false);
             },
-            child: widget.indexedBuilder(context, data, index, itemStyle,
-                data.getPair('materialState'), animationController, menuOpen),
+            child: widget.indexedBuilder(
+                context,
+                data,
+                index,
+                itemStyle,
+                data.getPair('materialState'),
+                animationController,
+                menuOpen,
+                level),
           ),
         );
       }
     } else {
       var data = <Widget>[];
       for (var i = 0; i < parentList!.length; i++) {
-        Widget? menu = children(i, menuOpen, parentList: parentList);
+        Widget? menu = children(level, i, menuOpen, parentList: parentList);
         if (menu == null) {
           continue;
         }
@@ -149,7 +158,7 @@ class _NavMenu extends State<NavMenu> with TickerProviderStateMixin {
   List<Widget> getChildren(bool menuOpen) {
     List<Widget> data = [];
     for (int i = 0; i < widget.rootCount; i++) {
-      Widget? rootMenu = children(i, menuOpen);
+      Widget? rootMenu = children(1, i, menuOpen);
       if (rootMenu == null) {
         continue;
       }

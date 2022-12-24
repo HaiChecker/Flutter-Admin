@@ -16,7 +16,7 @@
 |多语言 |❌    |...|
 
 # 引用
-[@AutoRoute](https://github.com/Milad-Akarie/auto_route_library "AutoRoute")
+[@GoRouter](https://github.com/flutter/packages/tree/main/packages/go_router "GoRouter")
 [@ResponsiveFramework](https://github.com/Codelessly/ResponsiveFramework "ResponsiveFramework")
 
 

@@ -1,8 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/router/router_info.dart';
+import 'package:go_router/go_router.dart';
 
-import '../config/logger.dart';
 
 
 
@@ -35,11 +34,10 @@ class _MenuTitle extends State<MenuTitle> {
     return Container(
       margin: const EdgeInsets.only(left: 10, right: 10),child: Row(
       children: AdminRouter().tips.values.map((e) {
-        bool selected = (e['id'] == AdminRouter().currentRoute?.id);
-        String title = e['title'] as String;
+        bool selected = e.name == AdminRouter().currentRoute?.name;
         return InkWell(
           onTap: () {
-            context.router.navigateNamed(e['fullPath'] as String);
+            context.goNamed(e.name!);
           },
           child: AnimatedContainer(
             margin: const EdgeInsets.only(right: 5),
@@ -55,7 +53,7 @@ class _MenuTitle extends State<MenuTitle> {
             child: Row(
               children: [
                 Text(
-                  title,
+                  e.title,
                   style: const TextStyle(
                       fontSize: 10,color:Colors.white),
                 ),

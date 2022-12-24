@@ -1,15 +1,10 @@
-import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin/router/router_info.dart';
 import 'package:flutter_admin/style/colors.dart';
 import 'package:fluttericon/entypo_icons.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
-import 'package:fluttericon/fontelico_icons.dart';
-import 'package:provider/provider.dart';
 
 import '../../style/base_style.dart';
 import '../animation/icon_color.dart';
-import 'controller/nav_menu_controller.dart';
 
 typedef IndexedBuilder = Widget Function(
     BuildContext context,
@@ -18,7 +13,8 @@ typedef IndexedBuilder = Widget Function(
     NavMenuItemStyle? style,
     MaterialStatesController materialStates,
     AnimationController animationController,
-    bool open);
+    bool open,
+    int level);
 
 typedef RootBuilder = RouteInfo Function(int index);
 typedef MenuStateBuilder = bool Function(RouteInfo route);
@@ -46,6 +42,7 @@ class NavMenuItem extends StatefulWidget {
   MaterialStatesController materialState;
   Animation<double> animation;
   bool menuOpen;
+  int level = 1;
 
   NavMenuItem(
       {super.key,
@@ -53,6 +50,7 @@ class NavMenuItem extends StatefulWidget {
       required this.menuOpen,
       required this.materialState,
       this.itemStyle,
+      required this.level,
       required this.animation});
 
   @override
@@ -79,11 +77,8 @@ class _NavMenuItem extends State<NavMenuItem>
 
   @override
   Widget build(BuildContext context) {
-    String path = widget.data.id;
     // 获取层级
-    int cell = path.split(".").length - 1;
-
-    switch (cell) {
+    switch (widget.level) {
       case 1:
         widget.itemStyle ??= AdminColors().get().navMenuItemStyle;
         break;
@@ -102,7 +97,7 @@ class _NavMenuItem extends State<NavMenuItem>
         height: size.maxWidth > 100 ? 50 : size.maxWidth,
         width: size.maxWidth,
         padding: size.maxWidth > 100
-            ? EdgeInsets.only(left: 15 * cell.toDouble())
+            ? EdgeInsets.only(left: 15 * widget.level.toDouble())
             : null,
         duration: const Duration(milliseconds: 200),
         child: widget.menuOpen

@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -7,30 +6,49 @@ import 'package:flutter_admin/views/base_views.dart';
 import 'package:flutter_admin/views/title.dart';
 import 'package:flutter_admin/widgets/menu/nav_menu.dart';
 import 'package:flutter_admin/widgets/menu/nav_menu_define.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 
-import '../config/menu_config.dart';
 import '../router/router_info.dart';
 import 'menu_title.dart';
 
 class RouterView extends AdminView {
-  RouterView({super.key});
+  final Widget child;
+
+  RouterView(this.child, {super.key});
 
   @override
   State<StatefulWidget> createState() => _RouterView();
 }
 
-class _RouterView extends AdminStateView {
+class _RouterView extends AdminStateView<RouterView> {
   final double _menuOpenRate = 0.125;
   final double _menuCloseRate = 0.032;
   bool menuOpen = true;
+  bool loadding = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     logger.i("RouterView Init State");
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext _context) {
+    GoRouter route = GoRouter.of(context);
+    var routeMatchList = route.routerDelegate.currentConfiguration;
+    if (routeMatchList.isNotEmpty) {
+      List<RouteInfo> currentRouters = [];
+      for (int i = 0; i < routeMatchList.matches.length; i++) {
+        var routeMatch = routeMatchList.matches[i];
+        if (routeMatch.route is RouteInfo) {
+          currentRouters.add(routeMatch.route as RouteInfo);
+        }
+      }
+      AdminRouter().setNewNav(currentRouters);
+    }
+    return super.build(_context);
   }
 
   Drawer getMenu(BoxConstraints constraints) {
@@ -48,14 +66,14 @@ class _RouterView extends AdminStateView {
         child: SingleChildScrollView(
           child: NavMenu(
             onSelected: (routeInfo) {
-              logger.i("Click Route:${routeInfo.fullPath}");
-              context.router.navigateNamed(routeInfo.fullPath);
+              context.goNamed(routeInfo.name!);
             },
             axis: Axis.vertical,
             open: menuOpen,
             indexedBuilder: (context, data, index, style, states,
-                animationController, menuOpen) {
+                animationController, menuOpen,level) {
               return NavMenuItem(
+                level: level,
                 data: data,
                 menuOpen: menuOpen,
                 materialState: states,
@@ -63,17 +81,16 @@ class _RouterView extends AdminStateView {
                 animation: animationController.drive(Tween(begin: 0, end: 0.5)),
               );
             },
-            rootCount: AdminRouter().routeInfo.last.children?.length ?? 0,
+            rootCount: menuRoute.length,
             width: width,
             rootBuilder: (int index) {
-              return AdminRouter().routeInfo.last.children![index];
+              return menuRoute[index];
             },
             menuStateBuilder: (RouteInfo route) {
-              return AdminRouter().currentRoute?.id == route.id;
+              return AdminRouter().currentRoute?.name == route.name;
             },
             onChild: (RouteInfo route) {
-              return !route.id.eq(AdminRouter().currentRoute?.id) &&
-                  (AdminRouter().currentRoute?.id ?? "-").startsWith(route.id);
+              return AdminRouter().isChild(route);
             },
           ),
         ),
@@ -83,6 +100,7 @@ class _RouterView extends AdminStateView {
 
   @override
   Widget? buildForLarge(BuildContext context) {
+    logger.i("Router View Build");
     return LayoutBuilder(builder: (context, size) {
       Drawer menu = getMenu(size);
       var main = SizedBox(
@@ -138,12 +156,12 @@ class _RouterView extends AdminStateView {
                 ),
               ),
             ),
-            const Positioned(
+            Positioned(
               top: 80,
               left: 0,
               right: 0,
               bottom: 0,
-              child: AutoRouter(),
+              child: widget.child,
             )
           ],
         ),
@@ -151,7 +169,7 @@ class _RouterView extends AdminStateView {
       List<Widget> widgets = [];
       if (!ResponsiveWrapper.of(context).isMobile) {
         widgets.add(AnimatedContainer(
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           child: menu,
         ));
       }
