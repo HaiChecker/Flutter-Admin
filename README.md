@@ -20,8 +20,8 @@
 
 
 # 截图
-[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Desktop_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Desktop_Main.png)
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Desktop_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Desktop_Main.png)
 
-[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Main.png)
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Mobile_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Mobile_Main.png)
 
-[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Menu.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Menu.png)
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Mobile_Menu.png)](https://github.com/HaiChecker/Flutter-Admin/blob/main/images/Mobile_Menu.png)
