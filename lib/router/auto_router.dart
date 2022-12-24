@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_admin/router/menu_guard.dart';
-import 'package:flutter_admin/views/app.dart';
+import 'package:flutter_admin/views/course/list.dart';
 import 'package:flutter_admin/views/index.dart';
 import 'package:flutter_admin/views/login/login.dart';
 import 'package:flutter_admin/views/router_view.dart';
@@ -96,9 +95,14 @@ import '../views/main_body.dart';
           children: [
             AutoRoute(
                 name: 'Course_List',
-                page: SchoolView,
+                page: CourseListPage,
                 path: 'list',
                 meta: {'title': '课程列表'}),
+            AutoRoute(
+                name: 'Course_Type',
+                page: SchoolView,
+                path: 'type',
+                meta: {'title': '课程分类'}),
             AutoRoute(
                 name: 'Course_Update',
                 page: SchoolView,
