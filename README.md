@@ -1,16 +1,27 @@
-# flutter_admin
+# Flutter Web Admin
 
-A new Flutter project.
+**Flutter 后台前端解决方案**
 
-## Getting Started
+### 功能
 
-This project is a starting point for a Flutter application.
+| 功能        | 状态   | 适配状态 |
+| --------   | -----:  | -------- |
+| 登录      |  ✅   |Mobile、Desktop|
+| 动态侧边栏（支持多级路由嵌套）        |   ✅  |Mobile、Desktop|
+| 快捷导航(标签页)       |    ✅    |Mobile、Desktop|
+| 横纵、固定表头表格       |    ✅    |Mobile、Desktop|
+| 自适应收缩侧边栏       |    ✅    |Mobile、Desktop|
+| Dashboard       |    ❌    |Mobile、Desktop|
+|图表 |❌    |Mobile、Desktop|
 
-A few resources to get you started if this is your first Flutter project:
+# 引用
+[AutoRoute](https://github.com/Milad-Akarie/auto_route_library "AutoRoute")
+[ResponsiveFramework](https://github.com/Codelessly/ResponsiveFramework "ResponsiveFramework")
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# 截图
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Desktop_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Desktop_Main.png)
+
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Main.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Main.png)
+
+[![](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Menu.png)](https://github.com/HaiChecker/Flutter-Admin/blob/master/images/Mobile_Menu.png)
