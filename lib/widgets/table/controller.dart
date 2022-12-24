@@ -4,7 +4,7 @@ import 'package:flutter_admin/widgets/table/table_item.dart';
 class AdminTableController<T> extends ChangeNotifier {
   List<T> _data = [];
 
-  List<AdminTableItem> items;
+  List<AdminTableItem<T>> items;
 
   AdminTableController({required this.items});
 
@@ -36,6 +36,18 @@ class AdminTableController<T> extends ChangeNotifier {
       }
     }
     return ret;
+  }
+
+  List<AdminTableItem<T>> autoItem(){
+    return items.where((element) => element.width == 0).toList();
+  }
+
+  double maxWidth(){
+    double width = 0;
+    for (var value in items) {
+      width += value.width;
+    }
+    return width;
   }
 
   bool fixed(FixedDirection fixed) {

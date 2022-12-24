@@ -46,7 +46,7 @@ class _IndexView extends AdminStateView<IndexView> {
           fixed: FixedDirection.left),
       AdminTableItem<dynamic>(itemView: itemView, width: 100, label: "标题3"),
       AdminTableItem<dynamic>(itemView: itemView, width: 100, label: "标题4"),
-      AdminTableItem<dynamic>(itemView: itemView, width: 100, label: "标题5"),
+      AdminTableItem<dynamic>(itemView: itemView, width: 0, label: "标题5"),
     ]);
     controller.setNewData([
       {'name': 'A'},

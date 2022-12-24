@@ -114,7 +114,7 @@ class _UserList extends AdminStateView<UserList> {
     return LayoutBuilder(builder: (context, size) {
       return Container(
         width: size.maxWidth,
-        margin: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(10),
         height: size.maxHeight,
         child: AdminTable(
           controller: _controller,

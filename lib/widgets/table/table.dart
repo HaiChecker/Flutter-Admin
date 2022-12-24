@@ -18,7 +18,6 @@ class AdminTable<T> extends StatefulWidget {
   final BoxDecoration? decoration;
   Map<int, MaterialStatesController> materialStates = {};
 
-
   AdminTable(
       {super.key,
       required this.controller,
@@ -42,6 +41,8 @@ class _AdminTable<T> extends State<AdminTable> {
   bool end = false;
   late AdminTableStyle tableStyle;
   late AdminTableItemStyle tableItemStyle;
+  List<AdminTableItem<dynamic>> autoItem = [];
+  double autoWidth = 0;
 
   @override
   void initState() {
@@ -101,8 +102,9 @@ class _AdminTable<T> extends State<AdminTable> {
     }
   }
 
-  _TableCell getHeader(FixedDirection direction) {
+  _TableCell getHeader(FixedDirection direction, List<double> widthList) {
     return _TableCell<T>(
+      width: widthList,
       materialStatesController: MaterialStatesController(),
       index: -1,
       tableItemStyle: tableItemStyle,
@@ -117,13 +119,21 @@ class _AdminTable<T> extends State<AdminTable> {
       return Tuple2(0, Container());
     }
     double width = 0;
+    List<double> widthList = [];
     List<AdminTableItem> item =
         widget.controller.getItem(fixedDirection: fixedDirection);
+
     for (var element in item) {
-      width += element.width;
+      if (autoItem.contains(element)) {
+        width += autoWidth;
+        widthList.add(autoWidth);
+      } else {
+        width += element.width;
+        widthList.add(element.width);
+      }
     }
 
-    _TableCell header = getHeader(fixedDirection);
+    _TableCell header = getHeader(fixedDirection, widthList);
     List<Widget> data = [];
     if (widget.fixedHeader) {
       data.add(SliverPersistentHeader(
@@ -147,6 +157,7 @@ class _AdminTable<T> extends State<AdminTable> {
           widget.materialStates[index]!.addListener(updateView);
         }
         return _TableCell<T>(
+          width: widthList,
           materialStatesController: widget.materialStates[index]!,
           tableStyle: tableStyle,
           tableItemStyle: tableItemStyle,
@@ -162,7 +173,7 @@ class _AdminTable<T> extends State<AdminTable> {
       behavior = const ScrollBehavior().copyWith(scrollbars: false);
     } else if (fixedDirection == FixedDirection.left) {
       behavior = const ScrollBehavior().copyWith(scrollbars: false);
-    } else {}
+    }
 
     BoxDecoration? boxDecoration;
 
@@ -232,6 +243,13 @@ class _AdminTable<T> extends State<AdminTable> {
       Widget? leftWidget;
       Widget? rightWidget;
       Widget? noneWidget;
+      final maxWidth = widget.controller.maxWidth();
+      if (maxWidth < size.maxWidth) {
+        autoItem = widget.controller.autoItem();
+        if (autoItem.isNotEmpty) {
+          autoWidth = (size.maxWidth - maxWidth) / autoItem.length;
+        }
+      }
 
       if (widget.controller.fixed(FixedDirection.left)) {
         left ??= _controllers.addAndGet();
@@ -267,7 +285,6 @@ class _AdminTable<T> extends State<AdminTable> {
               thumbVisibility: true,
               child: SingleChildScrollView(
                 controller: noneHorizontal,
-                // dragStartBehavior: DragStartBehavior.down,
                 scrollDirection: Axis.horizontal,
                 child: value.item2,
               ),
@@ -319,6 +336,7 @@ class _TableCell<T> extends StatefulWidget {
   final List<AdminTableItem> children;
   final int index;
   final T? data;
+  final List<double> width;
   final AdminTableItemStyle tableItemStyle;
   final AdminTableStyle tableStyle;
   final MaterialStatesController materialStatesController;
@@ -330,7 +348,8 @@ class _TableCell<T> extends StatefulWidget {
       required this.data,
       required this.tableItemStyle,
       required this.tableStyle,
-      required this.materialStatesController});
+      required this.materialStatesController,
+      required this.width});
 
   @override
   State<StatefulWidget> createState() => _TableCellState<T>();
@@ -372,10 +391,12 @@ class _TableCellState<T> extends State<_TableCell<T>> {
     } else {
       boxDecoration = BoxDecoration(color: itemColor);
     }
-    return Row(
-      children: widget.children.map((e) {
-        return SizedBox(
-          width: e.width,
+    List<Widget> getWidget() {
+      List<Widget> widgets = [];
+      for (var i = 0; i < widget.width.length; i++) {
+        var e = widget.children[i];
+        widgets.add(SizedBox(
+          width: widget.width[i],
           height: double.infinity,
           child: MouseRegion(
             onExit: (e) {
@@ -394,9 +415,12 @@ class _TableCellState<T> extends State<_TableCell<T>> {
               child: e.itemView(context, widget.index, widget.data, e),
             ),
           ),
-        );
-      }).toList(),
-    );
+        ));
+      }
+      return widgets;
+    }
+
+    return Row(children: getWidget());
   }
 }
 

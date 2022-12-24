@@ -108,7 +108,9 @@ class _RouterView extends AdminStateView {
                           InkWell(
                             onTap: () {
                               if (ResponsiveWrapper.of(context).isMobile) {
-                                menuOpen = true;
+                                setState(() {
+                                  menuOpen = true;
+                                });
                                 _scaffoldKey.currentState?.openDrawer();
                               } else {
                                 setState(() {
@@ -122,7 +124,7 @@ class _RouterView extends AdminStateView {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(left: 10),
+                            margin: const EdgeInsets.only(left: 10),
                             child: TitleView(),
                           )
                         ],
@@ -149,7 +151,7 @@ class _RouterView extends AdminStateView {
       List<Widget> widgets = [];
       if (!ResponsiveWrapper.of(context).isMobile) {
         widgets.add(AnimatedContainer(
-          duration: Duration(milliseconds: 2000),
+          duration: Duration(milliseconds: 200),
           child: menu,
         ));
       }

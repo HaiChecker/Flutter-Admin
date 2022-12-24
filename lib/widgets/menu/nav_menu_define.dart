@@ -118,17 +118,18 @@ class _NavMenuItem extends State<NavMenuItem>
                     duration: const Duration(milliseconds: 500),
                   ),
                   Expanded(
-                      child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: AnimatedDefaultTextStyle(
-                      style: widget.itemStyle!.titleStyle
-                          .resolve(widget.materialState.value),
-                      duration: const Duration(milliseconds: 500),
-                      child: Text(
-                        widget.data.title,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: AnimatedDefaultTextStyle(
+                        style: widget.itemStyle!.titleStyle
+                            .resolve(widget.materialState.value),
+                        duration: const Duration(milliseconds: 500),
+                        child: Text(
+                          widget.data.title,
+                        ),
                       ),
                     ),
-                  )),
+                  ),
                   Container(
                     margin: const EdgeInsets.only(right: 10),
                     child: widget.data.isChildren()
